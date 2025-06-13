@@ -1,8 +1,6 @@
 package main
 
 import (
-	"time"
-
 	"github.com/gin-gonic/gin"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/hiuncy/spp/handlers"
@@ -21,15 +19,7 @@ func main() {
 	userHandler := handlers.NewUserHandler(userRepo)
 
 	r := gin.Default()
-
-	r.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"http://localhost:3000"}, // ganti dengan URL React kamu
-		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
-		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization"},
-		ExposeHeaders:    []string{"Content-Length"},
-		AllowCredentials: true,
-		MaxAge:           12 * time.Hour,
-	}))
+	r.Use(cors.Default())
 
 	user := r.Group("/user")
 	{
