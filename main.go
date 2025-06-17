@@ -43,6 +43,8 @@ func main() {
 	kelas := r.Group("/kelas")
 	{
 		kelas.POST("/create", kelasHandler.CreateKelas)
+		spp.POST("/update", kelasHandler.UpdateKelas)
+		spp.GET("/delete/:id", kelasHandler.DeleteKelas)
 	}
 
 	r.Run() // listen and serve on 0.0.0.0:8080
