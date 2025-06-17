@@ -26,6 +26,8 @@ func main() {
 	sppHandler := handlers.NewSppHandler(sppRepo)
 	kelasRepo := repository.NewKelasRepository(db)
 	kelasHandler := handlers.NewKelasHandler(kelasRepo)
+	tataUsahaRepo := repository.NewTataUsahaRepository(db)
+	tataUsahaHandler := handlers.NewTataUsahaHandler(tataUsahaRepo)
 
 	r := gin.Default()
 	r.Use(cors.Default())
@@ -47,8 +49,16 @@ func main() {
 		kelas.GET("/get", kelasHandler.GetKelas)
 		kelas.GET("/get/:id", kelasHandler.GetKelasById)
 		kelas.POST("/create", kelasHandler.CreateKelas)
-		spp.POST("/update", kelasHandler.UpdateKelas)
-		spp.GET("/delete/:id", kelasHandler.DeleteKelas)
+		kelas.POST("/update", kelasHandler.UpdateKelas)
+		kelas.GET("/delete/:id", kelasHandler.DeleteKelas)
+	}
+	tataUsaha := r.Group("/tata-usaha")
+	{
+		tataUsaha.GET("/get", tataUsahaHandler.GetTataUsaha)
+		tataUsaha.GET("/get/:id", tataUsahaHandler.GetTataUsahaById)
+		tataUsaha.POST("/create", tataUsahaHandler.CreateTataUsaha)
+		tataUsaha.POST("/update", tataUsahaHandler.UpdateTataUsaha)
+		tataUsaha.GET("/delete/:id", tataUsahaHandler.DeleteTataUsaha)
 	}
 
 	r.Run() // listen and serve on 0.0.0.0:8080
