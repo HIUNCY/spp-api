@@ -15,10 +15,6 @@ func NewUserHandler(userRepo repository.UserRepo) *userHandler {
 	return &userHandler{userRepo}
 }
 
-func (u *userHandler) CreateUser(c *gin.Context) {
-	panic("unimplemented")
-}
-
 func (u *userHandler) Login(c *gin.Context) {
 	type userLogin struct {
 		Email    string `json:"email"`

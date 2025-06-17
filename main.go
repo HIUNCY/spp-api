@@ -7,24 +7,42 @@ import (
 	"github.com/hiuncy/spp/repository"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
+	"gorm.io/gorm/schema"
 )
 
 func main() {
-	db, err := gorm.Open(mysql.Open("root:@tcp(localhost:3306)/spponline?charset=utf8mb4&parseTime=True&loc=Local"), &gorm.Config{})
+	db, err := gorm.Open(mysql.Open("root:@tcp(localhost:3306)/spponline?charset=utf8mb4&parseTime=True&loc=Local"), &gorm.Config{
+		NamingStrategy: schema.NamingStrategy{
+			SingularTable: true,
+		},
+	})
 	if err != nil {
 		panic("failed to connect database")
 	}
 
 	userRepo := repository.NewUserRepository(db)
 	userHandler := handlers.NewUserHandler(userRepo)
+	sppRepo := repository.NewSppRepository(db)
+	sppHandler := handlers.NewSppHandler(sppRepo)
+	kelasRepo := repository.NewKelasRepository(db)
+	kelasHandler := handlers.NewKelasHandler(kelasRepo)
 
 	r := gin.Default()
 	r.Use(cors.Default())
 
 	user := r.Group("/user")
 	{
-		user.POST("/create", userHandler.CreateUser)
 		user.POST("/login", userHandler.Login)
+	}
+	spp := r.Group("/spp")
+	{
+		spp.POST("/create", sppHandler.CreateSpp)
+		spp.POST("/update", sppHandler.UpdateSpp)
+		spp.GET("/delete/:id", sppHandler.DeleteSpp)
+	}
+	kelas := r.Group("/kelas")
+	{
+		kelas.POST("/create", kelasHandler.CreateKelas)
 	}
 
 	r.Run() // listen and serve on 0.0.0.0:8080
