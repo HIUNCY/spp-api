@@ -17,6 +17,30 @@ func NewKelasHandler(kelasRepo repository.KelasRepo) *kelasHandler {
 	return &kelasHandler{kelasRepo}
 }
 
+func (k *kelasHandler) GetKelas(c *gin.Context) {
+	kelas, err := k.kelasRepo.GetKelas()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, kelas)
+}
+
+func (k *kelasHandler) GetKelasById(c *gin.Context) {
+	idKelas := c.Param("id")
+	idKelasInt, err := strconv.Atoi(idKelas)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "ID tidak valid"})
+		return
+	}
+	kelas, err := k.kelasRepo.GetKelasById(idKelasInt)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, kelas)
+}
+
 func (k *kelasHandler) CreateKelas(c *gin.Context) {
 	var kelas models.Kelas
 	if err := c.ShouldBindJSON(&kelas); err != nil {

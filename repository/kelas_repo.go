@@ -6,11 +6,31 @@ import (
 )
 
 type KelasRepo interface {
+	GetKelas() (*[]models.Kelas, error)
+	GetKelasById(idKelas int) (*[]models.Kelas, error)
 	CreateKelas(kelas *models.Kelas) error
+	UpdateKelas(kelas *models.Kelas) error
+	DeleteKelas(idSpp int) error
 }
 
 type kelasRepo struct {
 	db *gorm.DB
+}
+
+func (k *kelasRepo) GetKelas() (*[]models.Kelas, error) {
+	var kelas []models.Kelas
+	if err := k.db.Find(&kelas).Error; err != nil {
+		return nil, err
+	}
+	return &kelas, nil
+}
+
+func (k *kelasRepo) GetKelasById(idKelas int) (*[]models.Kelas, error) {
+	var kelas []models.Kelas
+	if err := k.db.First(&kelas, idKelas).Error; err != nil {
+		return nil, err
+	}
+	return &kelas, nil
 }
 
 func (k *kelasRepo) CreateKelas(kelas *models.Kelas) error {

@@ -36,12 +36,16 @@ func main() {
 	}
 	spp := r.Group("/spp")
 	{
+		spp.GET("/get", sppHandler.GetSpp)
+		spp.GET("/get/:id", sppHandler.GetSppById)
 		spp.POST("/create", sppHandler.CreateSpp)
 		spp.POST("/update", sppHandler.UpdateSpp)
 		spp.GET("/delete/:id", sppHandler.DeleteSpp)
 	}
 	kelas := r.Group("/kelas")
 	{
+		kelas.GET("/get", kelasHandler.GetKelas)
+		kelas.GET("/get/:id", kelasHandler.GetKelasById)
 		kelas.POST("/create", kelasHandler.CreateKelas)
 		spp.POST("/update", kelasHandler.UpdateKelas)
 		spp.GET("/delete/:id", kelasHandler.DeleteKelas)

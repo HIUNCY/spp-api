@@ -17,6 +17,30 @@ func NewSppHandler(sppRepo repository.SppRepo) *sppHandler {
 	return &sppHandler{sppRepo}
 }
 
+func (s *sppHandler) GetSpp(c *gin.Context) {
+	spp, err := s.sppRepo.GetSpp()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, spp)
+}
+
+func (s *sppHandler) GetSppById(c *gin.Context) {
+	idSpp := c.Param("id")
+	idSppInt, err := strconv.Atoi(idSpp)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "ID tidak valid"})
+		return
+	}
+	spp, err := s.sppRepo.GetSppById(idSppInt)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, spp)
+}
+
 func (s *sppHandler) CreateSpp(c *gin.Context) {
 	var spp models.Spp
 	if err := c.ShouldBindJSON(&spp); err != nil {

@@ -6,6 +6,8 @@ import (
 )
 
 type SppRepo interface {
+	GetSpp() (*[]models.Spp, error)
+	GetSppById(idSpp int) (*[]models.Spp, error)
 	CreateSpp(spp *models.Spp) error
 	UpdateSpp(spp *models.Spp) error
 	DeleteSpp(idSpp int) error
@@ -13,6 +15,22 @@ type SppRepo interface {
 
 type sppRepo struct {
 	db *gorm.DB
+}
+
+func (s *sppRepo) GetSpp() (*[]models.Spp, error) {
+	var spp []models.Spp
+	if err := s.db.Find(&spp).Error; err != nil {
+		return nil, err
+	}
+	return &spp, nil
+}
+
+func (s *sppRepo) GetSppById(idSpp int) (*[]models.Spp, error) {
+	var spp []models.Spp
+	if err := s.db.First(&spp, idSpp).Error; err != nil {
+		return nil, err
+	}
+	return &spp, nil
 }
 
 func (s *sppRepo) CreateSpp(spp *models.Spp) error {
