@@ -11,10 +11,11 @@ import (
 
 type tataUsahaHandler struct {
 	tataUsahaRepo repository.TataUsahaRepo
+	userRepo      repository.UserRepo
 }
 
-func NewTataUsahaHandler(tataUsahaRepo repository.TataUsahaRepo) *tataUsahaHandler {
-	return &tataUsahaHandler{tataUsahaRepo}
+func NewTataUsahaHandler(tataUsahaRepo repository.TataUsahaRepo, userRepo repository.UserRepo) *tataUsahaHandler {
+	return &tataUsahaHandler{tataUsahaRepo, userRepo}
 }
 
 func (t *tataUsahaHandler) GetTataUsaha(c *gin.Context) {
@@ -42,12 +43,37 @@ func (t *tataUsahaHandler) GetTataUsahaById(c *gin.Context) {
 }
 
 func (t *tataUsahaHandler) CreateTataUsaha(c *gin.Context) {
-	var tataUsaha models.TataUsaha
-	if err := c.ShouldBindJSON(&tataUsaha); err != nil {
+	var tuCreate models.TataUsahaUser
+	if err := c.ShouldBindJSON(&tuCreate); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	if err := t.tataUsahaRepo.CreateTataUsaha(&tataUsaha); err != nil {
+	if tuCreate.Level != "tu" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Hanya bisa menambahkan tata usaha"})
+		return
+	}
+	_, err := t.userRepo.GetUserByEmail(tuCreate.Email)
+	if err == nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Email sudah digunakan"})
+		return
+	}
+	user := models.User{
+		Email:    tuCreate.Email,
+		Password: tuCreate.Password,
+		Level:    tuCreate.Level,
+		Gambar:   tuCreate.Gambar,
+	}
+	idUser, err := t.userRepo.CreateUser(&user)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	tataUsaha := models.TataUsaha{
+		IdUser:   idUser,
+		NamaTu:   tuCreate.NamaTu,
+		NoTelpTu: tuCreate.NoTelpTu,
+	}
+	if err := t.tataUsahaRepo.CreateTataUsaha(idUser, &tataUsaha); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
@@ -68,13 +94,13 @@ func (t *tataUsahaHandler) UpdateTataUsaha(c *gin.Context) {
 }
 
 func (t *tataUsahaHandler) DeleteTataUsaha(c *gin.Context) {
-	idTataUsaha := c.Param("id")
-	idTataUsahaInt, err := strconv.Atoi(idTataUsaha)
+	idUser := c.Param("id")
+	idUserInt, err := strconv.Atoi(idUser)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "ID tidak valid"})
 		return
 	}
-	if err := t.tataUsahaRepo.DeleteTataUsaha(idTataUsahaInt); err != nil {
+	if err := t.userRepo.DeleteUser(idUserInt); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
