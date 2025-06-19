@@ -9,7 +9,7 @@ type SiswaRepo interface {
 	GetSiswa() (*[]models.GetSiswa, error)
 	// GetSiswaById(idTataUsaha int) (*models.GetDetailSiswa, error)
 	CreateSiswa(idUser int, siswa *models.Siswa) (int, error)
-	// UpdateSiswa(siswa *models.Siswa) error
+	UpdateSiswa(siswa *models.Siswa) error
 }
 
 type siswaRepo struct {
@@ -40,12 +40,12 @@ func (s *siswaRepo) CreateSiswa(idUser int, siswa *models.Siswa) (int, error) {
 	return siswa.IdSiswa, nil
 }
 
-// func (t *tataUsahaRepo) UpdateTataUsaha(tataUsaha *models.TataUsaha) error {
-// 	if err := t.db.Save(tataUsaha).Error; err != nil {
-// 		return err
-// 	}
-// 	return nil
-// }
+func (s *siswaRepo) UpdateSiswa(siswa *models.Siswa) error {
+	if err := s.db.Save(siswa).Error; err != nil {
+		return err
+	}
+	return nil
+}
 
 func NewSiswaRepository(db *gorm.DB) SiswaRepo {
 	return &siswaRepo{db}

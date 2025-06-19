@@ -3,6 +3,7 @@ package handlers
 import (
 	"fmt"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/hiuncy/spp/models"
@@ -77,29 +78,29 @@ func (s *siswaHandler) CreateSiswa(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "Sukses menambahkan siswa"})
 }
 
-// func (t *tataUsahaHandler) UpdateTataUsaha(c *gin.Context) {
-// 	var tataUsaha models.TataUsaha
-// 	if err := c.ShouldBindJSON(&tataUsaha); err != nil {
-// 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-// 		return
-// 	}
-// 	if err := t.tataUsahaRepo.UpdateTataUsaha(&tataUsaha); err != nil {
-// 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-// 		return
-// 	}
-// 	c.JSON(http.StatusOK, gin.H{"message": "Sukses memperbarui tata usaha"})
-// }
+func (s *siswaHandler) UpdateSiswa(c *gin.Context) {
+	var siswa models.Siswa
+	if err := c.ShouldBindJSON(&siswa); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	if err := s.siswaRepo.UpdateSiswa(&siswa); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"message": "Sukses memperbarui data siswa"})
+}
 
-// func (t *tataUsahaHandler) DeleteTataUsaha(c *gin.Context) {
-// 	idUser := c.Param("id")
-// 	idUserInt, err := strconv.Atoi(idUser)
-// 	if err != nil {
-// 		c.JSON(http.StatusBadRequest, gin.H{"error": "ID tidak valid"})
-// 		return
-// 	}
-// 	if err := t.userRepo.DeleteUser(idUserInt); err != nil {
-// 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-// 		return
-// 	}
-// 	c.JSON(http.StatusOK, gin.H{"message": "Sukses menghapus tata usaha"})
-// }
+func (s *siswaHandler) DeleteSiswa(c *gin.Context) {
+	idUser := c.Param("id")
+	idUserInt, err := strconv.Atoi(idUser)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "ID tidak valid"})
+		return
+	}
+	if err := s.userRepo.DeleteUser(idUserInt); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"message": "Sukses menghapus tata usaha"})
+}

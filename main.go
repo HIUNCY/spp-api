@@ -68,8 +68,8 @@ func main() {
 		siswa.GET("/get", siswaHandler.GetSiswa)
 		// tataUsaha.GET("/get/:id", tataUsahaHandler.GetTataUsahaById)
 		siswa.POST("/create", siswaHandler.CreateSiswa)
-		// tataUsaha.PUT("/update", tataUsahaHandler.UpdateTataUsaha)
-		// tataUsaha.DELETE("/delete/:id", tataUsahaHandler.DeleteTataUsaha)
+		siswa.PUT("/update", siswaHandler.UpdateSiswa)
+		siswa.DELETE("/delete/:id", siswaHandler.DeleteSiswa)
 	}
 
 	r.Run() // listen and serve on 0.0.0.0:8080
