@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Jun 17, 2025 at 10:18 AM
+-- Generation Time: Jun 19, 2025 at 10:27 AM
 -- Server version: 8.0.30
 -- PHP Version: 8.1.10
 
@@ -32,16 +32,6 @@ CREATE TABLE `kelas` (
   `kelas` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `kelas`
---
-
-INSERT INTO `kelas` (`id_kelas`, `kelas`) VALUES
-(1, 0),
-(2, 2),
-(3, 0),
-(4, 0);
-
 -- --------------------------------------------------------
 
 --
@@ -50,13 +40,12 @@ INSERT INTO `kelas` (`id_kelas`, `kelas`) VALUES
 
 CREATE TABLE `pembayaran` (
   `id_pembayaran` int NOT NULL,
-  `id_tu` int NOT NULL,
   `id_siswa` int NOT NULL,
   `id_spp` int NOT NULL,
-  `tgl_bayar` date NOT NULL,
+  `tgl_bayar` date DEFAULT NULL,
   `bulan_dibayar` varchar(10) COLLATE utf8mb4_general_ci NOT NULL,
-  `tahun_dibayar` varchar(4) COLLATE utf8mb4_general_ci NOT NULL,
-  `jumlah_bayar` int NOT NULL
+  `tahun_dibayar` varchar(4) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `jumlah_bayar` int DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -84,7 +73,6 @@ CREATE TABLE `siswa` (
 
 CREATE TABLE `spp` (
   `id_spp` int NOT NULL,
-  `id_kelas` int NOT NULL,
   `tahun` varchar(10) COLLATE utf8mb4_general_ci NOT NULL,
   `nominal` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -112,16 +100,9 @@ CREATE TABLE `user` (
   `id_user` int NOT NULL,
   `email` varchar(125) COLLATE utf8mb4_general_ci NOT NULL,
   `password` varchar(125) COLLATE utf8mb4_general_ci NOT NULL,
-  `level` enum('Admin','Tata_usaha','Siswa') COLLATE utf8mb4_general_ci NOT NULL,
+  `level` enum('admin','tu','siswa') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `gambar` varchar(125) COLLATE utf8mb4_general_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `user`
---
-
-INSERT INTO `user` (`id_user`, `email`, `password`, `level`, `gambar`) VALUES
-(1, 'memet@nigga.com', 'memet123', 'Admin', './img/memet.jpg');
 
 --
 -- Indexes for dumped tables
@@ -137,13 +118,15 @@ ALTER TABLE `kelas`
 -- Indexes for table `pembayaran`
 --
 ALTER TABLE `pembayaran`
-  ADD PRIMARY KEY (`id_pembayaran`);
+  ADD PRIMARY KEY (`id_pembayaran`),
+  ADD KEY `fk_pembayaran_siswa` (`id_siswa`);
 
 --
 -- Indexes for table `siswa`
 --
 ALTER TABLE `siswa`
-  ADD PRIMARY KEY (`id_siswa`);
+  ADD PRIMARY KEY (`id_siswa`),
+  ADD KEY `fk_siswa_user` (`id_user`);
 
 --
 -- Indexes for table `spp`
@@ -155,7 +138,8 @@ ALTER TABLE `spp`
 -- Indexes for table `tata_usaha`
 --
 ALTER TABLE `tata_usaha`
-  ADD PRIMARY KEY (`id_tu`);
+  ADD PRIMARY KEY (`id_tu`),
+  ADD KEY `fk_tata_usaha_user` (`id_user`);
 
 --
 -- Indexes for table `user`
@@ -171,7 +155,7 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT for table `kelas`
 --
 ALTER TABLE `kelas`
-  MODIFY `id_kelas` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id_kelas` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `pembayaran`
@@ -189,7 +173,7 @@ ALTER TABLE `siswa`
 -- AUTO_INCREMENT for table `spp`
 --
 ALTER TABLE `spp`
-  MODIFY `id_spp` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id_spp` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `tata_usaha`
@@ -202,6 +186,28 @@ ALTER TABLE `tata_usaha`
 --
 ALTER TABLE `user`
   MODIFY `id_user` int NOT NULL AUTO_INCREMENT;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `pembayaran`
+--
+ALTER TABLE `pembayaran`
+  ADD CONSTRAINT `fk_pembayaran_siswa` FOREIGN KEY (`id_siswa`) REFERENCES `siswa` (`id_siswa`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `siswa`
+--
+ALTER TABLE `siswa`
+  ADD CONSTRAINT `fk_siswa_user` FOREIGN KEY (`id_user`) REFERENCES `user` (`id_user`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `tata_usaha`
+--
+ALTER TABLE `tata_usaha`
+  ADD CONSTRAINT `fk_tata_usaha_user` FOREIGN KEY (`id_user`) REFERENCES `user` (`id_user`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
