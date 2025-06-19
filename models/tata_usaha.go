@@ -11,7 +11,6 @@ type TataUsahaUser struct {
 	IdTu     int    `json:"id_tu" gorm:"primaryKey"`
 	Email    string `json:"email"`
 	Password string `json:"password"`
-	Level    string `json:"level"`
 	Gambar   string `json:"gambar"`
 	IdUser   int    `json:"id_user"`
 	NamaTu   string `json:"nama_tu"`

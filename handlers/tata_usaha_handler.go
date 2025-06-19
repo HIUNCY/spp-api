@@ -27,29 +27,25 @@ func (t *tataUsahaHandler) GetTataUsaha(c *gin.Context) {
 	c.JSON(http.StatusOK, tataUsaha)
 }
 
-func (t *tataUsahaHandler) GetTataUsahaById(c *gin.Context) {
-	idTataUsaha := c.Param("id")
-	idTataUsahaInt, err := strconv.Atoi(idTataUsaha)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "ID tidak valid"})
-		return
-	}
-	kelas, err := t.tataUsahaRepo.GetTataUsahaById(idTataUsahaInt)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
-	c.JSON(http.StatusOK, kelas)
-}
+// func (t *tataUsahaHandler) GetTataUsahaById(c *gin.Context) {
+// 	idTataUsaha := c.Param("id")
+// 	idTataUsahaInt, err := strconv.Atoi(idTataUsaha)
+// 	if err != nil {
+// 		c.JSON(http.StatusBadRequest, gin.H{"error": "ID tidak valid"})
+// 		return
+// 	}
+// 	kelas, err := t.tataUsahaRepo.GetTataUsahaById(idTataUsahaInt)
+// 	if err != nil {
+// 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+// 		return
+// 	}
+// 	c.JSON(http.StatusOK, kelas)
+// }
 
 func (t *tataUsahaHandler) CreateTataUsaha(c *gin.Context) {
 	var tuCreate models.TataUsahaUser
 	if err := c.ShouldBindJSON(&tuCreate); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-	if tuCreate.Level != "tu" {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Hanya bisa menambahkan tata usaha"})
 		return
 	}
 	_, err := t.userRepo.GetUserByEmail(tuCreate.Email)
@@ -60,7 +56,7 @@ func (t *tataUsahaHandler) CreateTataUsaha(c *gin.Context) {
 	user := models.User{
 		Email:    tuCreate.Email,
 		Password: tuCreate.Password,
-		Level:    tuCreate.Level,
+		Level:    "tu",
 		Gambar:   tuCreate.Gambar,
 	}
 	idUser, err := t.userRepo.CreateUser(&user)

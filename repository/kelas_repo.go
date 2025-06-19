@@ -7,7 +7,7 @@ import (
 
 type KelasRepo interface {
 	GetKelas() (*[]models.Kelas, error)
-	GetKelasById(idKelas int) (*[]models.Kelas, error)
+	GetKelasById(idKelas int) (*models.Kelas, error)
 	CreateKelas(kelas *models.Kelas) error
 	UpdateKelas(kelas *models.Kelas) error
 	DeleteKelas(idSpp int) error
@@ -25,8 +25,8 @@ func (k *kelasRepo) GetKelas() (*[]models.Kelas, error) {
 	return &kelas, nil
 }
 
-func (k *kelasRepo) GetKelasById(idKelas int) (*[]models.Kelas, error) {
-	var kelas []models.Kelas
+func (k *kelasRepo) GetKelasById(idKelas int) (*models.Kelas, error) {
+	var kelas models.Kelas
 	if err := k.db.First(&kelas, idKelas).Error; err != nil {
 		return nil, err
 	}

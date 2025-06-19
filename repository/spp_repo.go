@@ -7,7 +7,7 @@ import (
 
 type SppRepo interface {
 	GetSpp() (*[]models.Spp, error)
-	GetSppById(idSpp int) (*[]models.Spp, error)
+	GetSppById(idSpp int) (*models.Spp, error)
 	CreateSpp(spp *models.Spp) error
 	UpdateSpp(spp *models.Spp) error
 	DeleteSpp(idSpp int) error
@@ -25,8 +25,8 @@ func (s *sppRepo) GetSpp() (*[]models.Spp, error) {
 	return &spp, nil
 }
 
-func (s *sppRepo) GetSppById(idSpp int) (*[]models.Spp, error) {
-	var spp []models.Spp
+func (s *sppRepo) GetSppById(idSpp int) (*models.Spp, error) {
+	var spp models.Spp
 	if err := s.db.First(&spp, idSpp).Error; err != nil {
 		return nil, err
 	}

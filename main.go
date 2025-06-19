@@ -28,6 +28,9 @@ func main() {
 	kelasHandler := handlers.NewKelasHandler(kelasRepo)
 	tataUsahaRepo := repository.NewTataUsahaRepository(db)
 	tataUsahaHandler := handlers.NewTataUsahaHandler(tataUsahaRepo, userRepo)
+	siswaRepo := repository.NewSiswaRepository(db)
+	pembayaranRepo := repository.NewPembayaranRepository(db)
+	siswaHandler := handlers.NewSiswaHandler(siswaRepo, userRepo, pembayaranRepo)
 
 	r := gin.Default()
 	r.Use(cors.Default())
@@ -55,10 +58,18 @@ func main() {
 	tataUsaha := r.Group("/tata-usaha")
 	{
 		tataUsaha.GET("/get", tataUsahaHandler.GetTataUsaha)
-		tataUsaha.GET("/get/:id", tataUsahaHandler.GetTataUsahaById)
+		// tataUsaha.GET("/get/:id", tataUsahaHandler.GetTataUsahaById)
 		tataUsaha.POST("/create", tataUsahaHandler.CreateTataUsaha)
 		tataUsaha.PUT("/update", tataUsahaHandler.UpdateTataUsaha)
 		tataUsaha.DELETE("/delete/:id", tataUsahaHandler.DeleteTataUsaha)
+	}
+	siswa := r.Group("/siswa")
+	{
+		siswa.GET("/get", siswaHandler.GetSiswa)
+		// tataUsaha.GET("/get/:id", tataUsahaHandler.GetTataUsahaById)
+		siswa.POST("/create", siswaHandler.CreateSiswa)
+		// tataUsaha.PUT("/update", tataUsahaHandler.UpdateTataUsaha)
+		// tataUsaha.DELETE("/delete/:id", tataUsahaHandler.DeleteTataUsaha)
 	}
 
 	r.Run() // listen and serve on 0.0.0.0:8080
