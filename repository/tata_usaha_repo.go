@@ -9,7 +9,7 @@ type TataUsahaRepo interface {
 	GetTataUsaha() (*[]models.GetTataUsaha, error)
 	// GetTataUsahaById(idTataUsaha int) (*models.TataUsaha, error)
 	CreateTataUsaha(idUser int, tataUsaha *models.TataUsaha) error
-	UpdateTataUsaha(tataUsaha *models.TataUsaha) error
+	UpdateTataUsaha(tataUsaha *models.UpdateTataUsaha) error
 }
 
 type tataUsahaRepo struct {
@@ -40,8 +40,8 @@ func (t *tataUsahaRepo) CreateTataUsaha(idUser int, tataUsaha *models.TataUsaha)
 	return nil
 }
 
-func (t *tataUsahaRepo) UpdateTataUsaha(tataUsaha *models.TataUsaha) error {
-	if err := t.db.Save(tataUsaha).Error; err != nil {
+func (t *tataUsahaRepo) UpdateTataUsaha(tataUsaha *models.UpdateTataUsaha) error {
+	if err := t.db.Table("tata_usaha").Save(tataUsaha).Error; err != nil {
 		return err
 	}
 	return nil

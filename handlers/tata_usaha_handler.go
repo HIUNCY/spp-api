@@ -77,7 +77,7 @@ func (t *tataUsahaHandler) CreateTataUsaha(c *gin.Context) {
 }
 
 func (t *tataUsahaHandler) UpdateTataUsaha(c *gin.Context) {
-	var tataUsaha models.TataUsaha
+	var tataUsaha models.UpdateTataUsaha
 	if err := c.ShouldBindJSON(&tataUsaha); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return

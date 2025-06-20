@@ -24,3 +24,9 @@ type GetTataUsaha struct {
 	NamaTu   string `json:"nama_tu"`
 	NoTelpTu string `json:"no_telp_tu"`
 }
+
+type UpdateTataUsaha struct {
+	IdTu     int    `json:"id_tu" gorm:"primaryKey"`
+	NamaTu   string `json:"nama_tu"`
+	NoTelpTu string `json:"no_telp_tu"`
+}
